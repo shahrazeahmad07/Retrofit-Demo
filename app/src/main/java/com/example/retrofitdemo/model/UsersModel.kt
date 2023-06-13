@@ -1,3 +1,7 @@
 package com.example.retrofitdemo.model
 
-class UsersModel : ArrayList<UsersModelItem>()
+data class UsersModel(
+    val avatar_url: String,
+    val id: Int,
+    val login: String,
+)
