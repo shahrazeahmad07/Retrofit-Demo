@@ -8,4 +8,5 @@ interface UsersApiInterface {
 
     @GET(value = "/users")
     suspend fun getUsers() : Response<List<UsersModel>>
+    // here I have seen people using call return type as well. which I have to try next
 }
