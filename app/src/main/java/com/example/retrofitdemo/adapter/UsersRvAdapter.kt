@@ -7,10 +7,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.retrofitdemo.R
-import com.example.retrofitdemo.model.UsersModel
+import com.example.retrofitdemo.model.Data
 import com.squareup.picasso.Picasso
 
-class UsersRvAdapter(private val list: List<UsersModel>) : RecyclerView.Adapter<UsersRvAdapter.ViewHolder>(){
+class UsersRvAdapter(private val list: List<Data>) : RecyclerView.Adapter<UsersRvAdapter.ViewHolder>(){
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -19,8 +19,9 @@ class UsersRvAdapter(private val list: List<UsersModel>) : RecyclerView.Adapter<
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.tvUserName.text = list[position].login
-        Picasso.get().load(list[position].avatar_url).into(holder.ivUserAvatar)
+        val name = "${list[position].first_name} ${list[position].last_name}"
+        holder.tvUserName.text = name
+        Picasso.get().load(list[position].avatar).into(holder.ivUserAvatar)
     }
 
     override fun getItemCount(): Int {

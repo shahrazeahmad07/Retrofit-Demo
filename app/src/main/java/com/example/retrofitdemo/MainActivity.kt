@@ -2,16 +2,17 @@ package com.example.retrofitdemo
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.retrofitdemo.adapter.UsersRvAdapter
 import com.example.retrofitdemo.apiinterface.UsersApiInterface
 import com.example.retrofitdemo.apiinterface.UsersRetrofitUtilities
 import com.example.retrofitdemo.databinding.ActivityMainBinding
-import com.example.retrofitdemo.model.UsersModel
-import kotlinx.coroutines.GlobalScope
+import com.example.retrofitdemo.model.Data
+import com.example.retrofitdemo.model.Users
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
@@ -19,6 +20,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var usersApi: UsersApiInterface
     private lateinit var usersRvAdapter: UsersRvAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -30,17 +32,25 @@ class MainActivity : AppCompatActivity() {
         //! setting retrofit object.
         usersApi = UsersRetrofitUtilities.getRetrofitInstance().create(UsersApiInterface::class.java)
 
+        val mutableLiveDataList = MutableLiveData<Users>()
+        var liveDataListOfUsers : LiveData<Users>
+
 
         lifecycleScope.launch {
             val result = usersApi.getUsers()
 
             if (result.body() != null) {
-                showAllUsers(result.body())
+                mutableLiveDataList.postValue(result.body())
+                liveDataListOfUsers = mutableLiveDataList
+                liveDataListOfUsers.observe(this@MainActivity) {
+                    list ->
+                    showAllUsers(list.data)
+                }
             }
         }
     }
 
-    private fun showAllUsers(list: List<UsersModel>?) {
+    private fun showAllUsers(list: List<Data>?) {
         if (list?.isNotEmpty()!!) {
             binding.usersRecyclerView.visibility = View.VISIBLE
             binding.tvNoRecords.visibility = View.GONE
