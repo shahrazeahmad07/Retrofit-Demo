@@ -2,6 +2,7 @@ package com.example.retrofitdemo
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -36,8 +37,9 @@ class MainActivity : AppCompatActivity() {
         var liveDataListOfUsers : LiveData<Users>
 
 
+        //! Get All Users
         lifecycleScope.launch {
-            val result = usersApi.getUsers()
+            val result = usersApi.getAllUsers()
 
             if (result.body() != null) {
                 mutableLiveDataList.postValue(result.body())
@@ -46,6 +48,16 @@ class MainActivity : AppCompatActivity() {
                     list ->
                     showAllUsers(list.data)
                 }
+            }
+        }
+
+        //! Single User Data
+        lifecycleScope.launch {
+            val result = usersApi.getUserById("7")
+            if (result.isSuccessful) {
+                Log.d("Single User", result.body()?.data.toString())
+            } else {
+                Log.d("Single User", result.message())
             }
         }
     }
