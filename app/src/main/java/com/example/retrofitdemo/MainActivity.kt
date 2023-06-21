@@ -71,8 +71,6 @@ class MainActivity : AppCompatActivity() {
             val result = usersApi.updateUser("7", body)
             if (result.isSuccessful) {
                 Log.d("Updated User", result.body().toString())
-            } else {
-                Log.d("Single User", result.message())
             }
         }
     }

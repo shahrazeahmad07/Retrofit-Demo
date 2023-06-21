@@ -1,5 +1,6 @@
 package com.example.retrofitdemo.apiinterface
 
+import com.example.retrofitdemo.model.Data2
 import com.example.retrofitdemo.model.User
 import com.example.retrofitdemo.model.Users
 import com.google.gson.JsonObject
@@ -19,5 +20,5 @@ interface UsersApiInterface {
     suspend fun getUserById(@Path("id") id: String) : Response<User>
 
     @PUT("/api/users/{id}")
-    suspend fun updateUser(@Path("id") id: String, @Body body: JsonObject) : Response<JsonObject>
+    suspend fun updateUser(@Path("id") id: String, @Body body: JsonObject) : Response<Data2>
 }
