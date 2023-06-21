@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
 
         //! Single User Data
         lifecycleScope.launch {
-            val result = usersApi.getUserById("7")
+            val result = usersApi.getUserById("8")
             if (result.isSuccessful) {
                 Log.d("Single User", result.body()?.data.toString())
             } else {
@@ -71,6 +71,23 @@ class MainActivity : AppCompatActivity() {
             val result = usersApi.updateUser("7", body)
             if (result.isSuccessful) {
                 Log.d("Updated User", result.body().toString())
+            } else {
+                Log.d("Single User", result.message())
+            }
+
+        }
+
+        //! Create User
+        lifecycleScope.launch {
+            val body = JsonObject().apply {
+                addProperty("name", "Shahzaib Ahmad")
+                addProperty("job", "Android Developer")
+            }
+            val result = usersApi.createUser(body)
+            if (result.isSuccessful) {
+                Log.d("Created User", result.body().toString())
+            } else {
+                Log.d("Single User", result.message())
             }
         }
     }
