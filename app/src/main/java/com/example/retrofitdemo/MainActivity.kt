@@ -14,6 +14,7 @@ import com.example.retrofitdemo.apiinterface.UsersRetrofitUtilities
 import com.example.retrofitdemo.databinding.ActivityMainBinding
 import com.example.retrofitdemo.model.Data
 import com.example.retrofitdemo.model.Users
+import com.google.gson.JsonObject
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
@@ -56,6 +57,20 @@ class MainActivity : AppCompatActivity() {
             val result = usersApi.getUserById("7")
             if (result.isSuccessful) {
                 Log.d("Single User", result.body()?.data.toString())
+            } else {
+                Log.d("Single User", result.message())
+            }
+        }
+
+        //! Update User
+        lifecycleScope.launch {
+            val body = JsonObject().apply {
+                addProperty("name", "Shahzaib")
+                addProperty("job", "Android Developer")
+            }
+            val result = usersApi.updateUser("7", body)
+            if (result.isSuccessful) {
+                Log.d("Updated User", result.body().toString())
             } else {
                 Log.d("Single User", result.message())
             }
