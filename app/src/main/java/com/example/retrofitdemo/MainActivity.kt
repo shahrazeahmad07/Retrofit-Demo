@@ -90,6 +90,16 @@ class MainActivity : AppCompatActivity() {
                 Log.d("Single User", result.message())
             }
         }
+
+        //! Delete User
+        lifecycleScope.launch {
+            val result = usersApi.deleteUserById("3")
+            if (result.isSuccessful) {
+                Log.d("Deleted User", result.body().toString())
+            } else {
+                Log.d("Single User", result.message())
+            }
+        }
     }
 
     private fun showAllUsers(list: List<Data>?) {

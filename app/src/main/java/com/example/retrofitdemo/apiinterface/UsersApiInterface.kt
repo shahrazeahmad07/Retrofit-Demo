@@ -6,6 +6,7 @@ import com.example.retrofitdemo.model.Users
 import com.google.gson.JsonObject
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -25,4 +26,7 @@ interface UsersApiInterface {
 
     @POST("/api/users")
     suspend fun createUser(@Body body: JsonObject) : Response<Data2>
+
+    @DELETE("/api/users/{id}")
+    suspend fun deleteUserById(@Path("id") id: String) : Response<JsonObject>
 }
