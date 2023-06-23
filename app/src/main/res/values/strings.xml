@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Retrofit Demo</string>
     <string name="no_user_found">No User Found!!</string>
+    <string name="get_all_users">Get All Users</string>
+    <string name="get_single_user">Get Single User</string>
+    <string name="create_user">Create User</string>
+    <string name="update_user_by_id">Update User by ID</string>
+    <string name="delete_user_by_id">Delete User By ID</string>
 </resources>
