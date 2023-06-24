@@ -79,18 +79,23 @@ class MainActivity1 : AppCompatActivity() {
 
                 val builder = AlertDialog.Builder(this@MainActivity1)
                 builder.setTitle("User Created")
-                builder.setMessage("Name: ${result.body()?.name}\n" +
-                        "ID: ${result.body()?.id}\n" +
-                        "Job: ${result.body()?.job}\n" +
-                        "Date Created: ${result.body()?.createdAt}")
-                builder.setPositiveButton("Ok") {
-                    dialog, _ ->
+                builder.setMessage(
+                    "Name: ${result.body()?.name}\n" +
+                            "ID: ${result.body()?.id}\n" +
+                            "Job: ${result.body()?.job}\n" +
+                            "Date Created: ${result.body()?.createdAt}"
+                )
+                builder.setPositiveButton("Ok") { dialog, _ ->
                     dialog.dismiss()
                 }
                 builder.setCancelable(false)
                 builder.create().show()
             } else {
-                Log.d("Created User", result.message())
+                Toast.makeText(
+                    this@MainActivity1,
+                    "There was some error: ${result.message()}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
