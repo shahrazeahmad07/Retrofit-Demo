@@ -54,9 +54,14 @@ class MainActivity1 : AppCompatActivity() {
         binding?.btnUpdateUser?.setOnClickListener {
             showIdDialog("Update")
         }
+
+        //! Delete User by ID
+        binding?.btnDeleteUser?.setOnClickListener {
+            showIdDialog("Delete")
+        }
     }
 
-    //! get user ID
+    //! get user ID from the user on which he want to perform operation
     private fun showIdDialog(calledBy: String) {
         val dialog = Dialog(this)
         val dialogBinding = DialogUserIdBinding.inflate(layoutInflater)
@@ -77,7 +82,10 @@ class MainActivity1 : AppCompatActivity() {
                         getSingleUser(userId)
                     }
                     "Update" -> {
-                        showUserAtId(userId, "Update")
+                        checkAndShowTheUserAtIDAndCallRelevantOperationThen(userId, "Update")
+                    }
+                    "Delete" -> {
+                        checkAndShowTheUserAtIDAndCallRelevantOperationThen(userId, "Delete")
                     }
                 }
                 dialog.dismiss()
@@ -88,13 +96,18 @@ class MainActivity1 : AppCompatActivity() {
         dialog.show()
     }
 
-    private fun showUserAtId(id: String, calledBy: String) {
+    //! this is a relay method , a divider, it checks whether user is available or not
+    // and if available at certain id call relevant method
+    private fun checkAndShowTheUserAtIDAndCallRelevantOperationThen(id: String, calledBy: String) {
         lifecycleScope.launch {
             val result = usersApi.getUserById(id)
             if (result.isSuccessful && result.body() != null) {
                 when(calledBy) {
                     "Update" -> {
                         updateUser(id, result.body()!!.data)
+                    }
+                    "Delete" -> {
+                        deleteUser(id, result.body()!!.data)
                     }
                 }
             } else {
@@ -115,6 +128,37 @@ class MainActivity1 : AppCompatActivity() {
         }
     }
 
+    //! delete user function, deletes the user and then generates a toast telling about output
+    private fun deleteUser(id: String, data: Data) {
+        val builder = AlertDialog.Builder(this@MainActivity1)
+        builder.setTitle("Confirm")
+        val userName = "${data.first_name} ${data.last_name}"
+        builder.setMessage(
+            "ID: $id\n" +
+                    "Name: $userName\n" +
+                    "Email: ${data.email}"
+        )
+        builder.setNegativeButton("Cancel") { dialog, _ ->
+            dialog.dismiss()
+        }
+        builder.setPositiveButton("Delete") {
+            dialog, _ ->
+            //! Delete User
+            lifecycleScope.launch {
+                val result = usersApi.deleteUserById(id)
+                if (result.isSuccessful) {
+                    Toast.makeText(this@MainActivity1, "User Deleted!!", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this@MainActivity1, "Something Went Wrong: ${result.message()}", Toast.LENGTH_SHORT).show()
+                }
+            }
+            dialog.dismiss()
+        }
+        builder.setCancelable(false)
+        builder.create().show()
+    }
+
+    //! Show update user dialog with editable fields to update the user
     private fun updateUser(id: String, data: Data) {
         val dialog = Dialog(this, R.style.ThemeDialog)
         val dialogBinding = DialogUpdateUserBinding.inflate(layoutInflater)
@@ -137,6 +181,7 @@ class MainActivity1 : AppCompatActivity() {
                     }
                     val result = usersApi.updateUser(id, body)
                     if (result.isSuccessful) {
+                        //! showing response of updated user in a dialog made with dialog builder
                         dialog.dismiss()
                         val builder = AlertDialog.Builder(this@MainActivity1)
                         builder.setTitle("User Updated")
@@ -162,11 +207,13 @@ class MainActivity1 : AppCompatActivity() {
         dialog.show()
     }
 
+    //! fetch single user and then show it in a dialog by calling show details method next
     private fun getSingleUser(id: String) {
         //! Single User Data
         lifecycleScope.launch {
             val result = usersApi.getUserById(id)
             if (result.isSuccessful && result.body() != null) {
+                //! showing details in custom dialog
                 showDetails(result.body()!!.data)
             } else {
                 if (result.body() == null) {
@@ -199,7 +246,7 @@ class MainActivity1 : AppCompatActivity() {
         dialog.show()
     }
 
-    //! Show Create User dialog to get the user details
+    //! Show Create User dialog to get the user details and then call Create User Function
     private fun showCreateUserDialog() {
         val dialog = Dialog(this, R.style.ThemeDialog)
         val dialogBinding = DialogCreateUserBinding.inflate(layoutInflater)
@@ -231,7 +278,7 @@ class MainActivity1 : AppCompatActivity() {
             }
             val result = usersApi.createUser(body)
             if (result.isSuccessful) {
-
+                //! Show created User Data in a dialog made with builder
                 val builder = AlertDialog.Builder(this@MainActivity1)
                 builder.setTitle("User Created")
                 builder.setMessage(

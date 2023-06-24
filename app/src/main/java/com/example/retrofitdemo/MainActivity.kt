@@ -2,7 +2,6 @@ package com.example.retrofitdemo
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -14,22 +13,21 @@ import com.example.retrofitdemo.apiinterface.UsersRetrofitUtilities
 import com.example.retrofitdemo.databinding.ActivityMainBinding
 import com.example.retrofitdemo.model.Data
 import com.example.retrofitdemo.model.Users
-import com.google.gson.JsonObject
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
+    private var binding: ActivityMainBinding? = null
     private lateinit var usersApi: UsersApiInterface
     private lateinit var usersRvAdapter: UsersRvAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(binding?.root)
 
         //! recycler view
-        binding.usersRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding?.usersRecyclerView?.layoutManager = LinearLayoutManager(this)
 
         //! setting retrofit object.
         usersApi = UsersRetrofitUtilities.getRetrofitInstance().create(UsersApiInterface::class.java)
@@ -51,29 +49,26 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
 
-
-
-        //! Delete User
-        lifecycleScope.launch {
-            val result = usersApi.deleteUserById("3")
-            if (result.isSuccessful) {
-                Log.d("Deleted User", result.body().toString())
-            } else {
-                Log.d("Single User", result.message())
-            }
+    //! setting adapter and passing the list
+    private fun showAllUsers(list: List<Data>?) {
+        if (list?.isNotEmpty()!!) {
+            binding?.usersRecyclerView?.visibility = View.VISIBLE
+            binding?.tvNoRecords?.visibility = View.GONE
+            usersRvAdapter = UsersRvAdapter(list)
+            binding?.usersRecyclerView?.adapter = usersRvAdapter
+        } else {
+            binding?.usersRecyclerView?.visibility = View.GONE
+            binding?.tvNoRecords?.visibility = View.VISIBLE
         }
     }
 
-    private fun showAllUsers(list: List<Data>?) {
-        if (list?.isNotEmpty()!!) {
-            binding.usersRecyclerView.visibility = View.VISIBLE
-            binding.tvNoRecords.visibility = View.GONE
-            usersRvAdapter = UsersRvAdapter(list)
-            binding.usersRecyclerView.adapter = usersRvAdapter
-        } else {
-            binding.usersRecyclerView.visibility = View.GONE
-            binding.tvNoRecords.visibility = View.VISIBLE
+    //! overriding on destroy to delete binding object
+    override fun onDestroy() {
+        super.onDestroy()
+        if (binding != null) {
+            binding = null
         }
     }
 }
