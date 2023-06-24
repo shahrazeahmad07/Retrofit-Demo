@@ -6,4 +6,12 @@
     <string name="create_user">Create User</string>
     <string name="update_user_by_id">Update User by ID</string>
     <string name="delete_user_by_id">Delete User By ID</string>
+    <string name="enter_the_users_id_you_want_to_edit">Enter the Users ID You want to Edit</string>
+    <string name="enter_details">Enter Details</string>
+
+    <string name="name">Name</string>
+    <string name="enter_name">Enter Name</string>
+    <string name="job">Job</string>
+    <string name="enter_job_or_your_occupation">Enter Job or your occupation</string>
+    <string name="cancel">Cancel</string>
 </resources>

@@ -77,20 +77,6 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        //! Create User
-        lifecycleScope.launch {
-            val body = JsonObject().apply {
-                addProperty("name", "Shahzaib Ahmad")
-                addProperty("job", "Android Developer")
-            }
-            val result = usersApi.createUser(body)
-            if (result.isSuccessful) {
-                Log.d("Created User", result.body().toString())
-            } else {
-                Log.d("Single User", result.message())
-            }
-        }
-
         //! Delete User
         lifecycleScope.launch {
             val result = usersApi.deleteUserById("3")
