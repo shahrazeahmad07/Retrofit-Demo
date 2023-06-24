@@ -3,10 +3,9 @@ package com.example.retrofitdemo
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
-import android.content.res.Resources.Theme
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.example.retrofitdemo.apiinterface.UsersApiInterface
@@ -14,13 +13,12 @@ import com.example.retrofitdemo.apiinterface.UsersRetrofitUtilities
 import com.example.retrofitdemo.databinding.ActivityMain1Binding
 import com.example.retrofitdemo.databinding.DialogCreateUserBinding
 import com.example.retrofitdemo.databinding.DialogShowSingleUserBinding
+import com.example.retrofitdemo.databinding.DialogUpdateUserBinding
 import com.example.retrofitdemo.databinding.DialogUserIdBinding
 import com.example.retrofitdemo.model.Data
 import com.google.gson.JsonObject
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.launch
-import retrofit2.Retrofit
-import retrofit2.create
 
 class MainActivity1 : AppCompatActivity() {
 
@@ -47,23 +45,118 @@ class MainActivity1 : AppCompatActivity() {
             startActivity(intent)
         }
 
+        //! Get Single User Button
         binding?.btnGetSingleUser?.setOnClickListener {
-            showIdDialog()
+            showIdDialog("Single")
+        }
+
+        //! Update User By ID
+        binding?.btnUpdateUser?.setOnClickListener {
+            showIdDialog("Update")
         }
     }
 
     //! get user ID
-    private fun showIdDialog() {
+    private fun showIdDialog(calledBy: String) {
         val dialog = Dialog(this)
         val dialogBinding = DialogUserIdBinding.inflate(layoutInflater)
         dialog.setContentView(dialogBinding.root)
+        when(calledBy) {
+            "Single" ->
+                dialogBinding.btnOkay.text = getString(R.string.get)
+            "Update" ->
+                dialogBinding.btnOkay.text = getString(R.string.find)
+            "Delete" ->
+                dialogBinding.btnOkay.text = getString(R.string.find)
+        }
         dialogBinding.btnOkay.setOnClickListener {
             val userId = dialogBinding.etDialogUserId.text.toString()
             if (userId.isNotEmpty()) {
-                getSingleUser(userId)
+                when(calledBy) {
+                    "Single" -> {
+                        getSingleUser(userId)
+                    }
+                    "Update" -> {
+                        showUserAtId(userId, "Update")
+                    }
+                }
                 dialog.dismiss()
             } else {
                 Toast.makeText(this@MainActivity1, "Enter User ID!!", Toast.LENGTH_SHORT).show()
+            }
+        }
+        dialog.show()
+    }
+
+    private fun showUserAtId(id: String, calledBy: String) {
+        lifecycleScope.launch {
+            val result = usersApi.getUserById(id)
+            if (result.isSuccessful && result.body() != null) {
+                when(calledBy) {
+                    "Update" -> {
+                        updateUser(id, result.body()!!.data)
+                    }
+                }
+            } else {
+                if (result.body() == null) {
+                    Toast.makeText(
+                        this@MainActivity1,
+                        "No User Found",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    Toast.makeText(
+                        this@MainActivity1,
+                        "Something Went Wrong: ${result.message()}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+    }
+
+    private fun updateUser(id: String, data: Data) {
+        val dialog = Dialog(this, R.style.ThemeDialog)
+        val dialogBinding = DialogUpdateUserBinding.inflate(layoutInflater)
+        dialog.setContentView(dialogBinding.root)
+        val userIDString = "ID: $id"
+        dialogBinding.tvDialogId.text = userIDString
+        val name = "${data.first_name} ${data.last_name}"
+        dialogBinding.etDialogName.setText(name)
+        dialogBinding.etDialogJob.setText(getString(R.string.unknown))
+        dialogBinding.tvUpdatedAt.visibility = View.GONE
+        dialogBinding.btnUpdate.setOnClickListener {
+            val newName = dialogBinding.etDialogName.text.toString()
+            val newJob = dialogBinding.etDialogJob.text.toString()
+            if (newName.isNotEmpty() && newJob.isNotEmpty()) {
+                //! Update User
+                lifecycleScope.launch {
+                    val body = JsonObject().apply {
+                        addProperty("name", newName)
+                        addProperty("job", newJob)
+                    }
+                    val result = usersApi.updateUser(id, body)
+                    if (result.isSuccessful) {
+                        dialog.dismiss()
+                        val builder = AlertDialog.Builder(this@MainActivity1)
+                        builder.setTitle("User Updated")
+                        builder.setMessage(
+                            "ID: $id\n" +
+                            "Name: ${result.body()?.name}\n" +
+                                    "Job: ${result.body()?.job}\n" +
+                                    "Updated At: ${result.body()?.updatedAt}"
+                        )
+                        builder.setPositiveButton("Ok") { dialog, _ ->
+                            dialog.dismiss()
+                        }
+                        builder.setCancelable(false)
+                        builder.create().show()
+                    } else {
+                        Toast.makeText(this@MainActivity1, "Something went wrong: ${result.message()}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } else {
+                Toast.makeText(this, "Enter all fields!!", Toast.LENGTH_SHORT).show()
             }
         }
         dialog.show()

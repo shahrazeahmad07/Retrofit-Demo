@@ -1,22 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="10dp">
+    android:padding="15dp">
 
     <TextView
-        android:id="@+id/tvDialogTitle"
-        android:layout_width="match_parent"
+        android:id="@+id/tvDialogId"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxWidth="487dp"
-        android:padding="12dp"
-        android:text="@string/enter_details"
-        android:textSize="19sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/id"
+        android:textSize="17sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/llName"/>
 
     <LinearLayout
         android:id="@+id/llName"
@@ -25,7 +22,7 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvDialogTitle">
+        app:layout_constraintTop_toBottomOf="@id/tvDialogId">
 
         <TextView
             android:layout_width="wrap_content"
@@ -79,33 +76,24 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/btnCreateUser"
+        android:id="@+id/tvUpdatedAt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/create_user"
-        android:textSize="18sp"
-        android:layout_marginVertical="7dp"
-        android:paddingVertical="10dp"
-        android:paddingHorizontal="10dp"
-        android:layout_marginHorizontal="5dp"
-        android:gravity="center"
-        android:background="@drawable/background_dialog_button"
-        app:layout_constraintTop_toBottomOf="@id/llJob"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginEnd="5dp"/>
-
-    <TextView
-        android:id="@+id/btnDialogCancel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="7dp"
-        android:gravity="center"
-        android:paddingVertical="17dp"
-        android:paddingStart="15dp"
-        android:paddingEnd="0dp"
-        android:text="@string/cancel"
-        android:textSize="18sp"
+        android:text="@string/updated_at"
+        android:textSize="17sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/llJob" />
+
+    <Button
+        android:id="@+id/btnUpdate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/update"
+        android:textAllCaps="false"
+        android:textSize="17sp"
+        app:layout_constraintTop_toBottomOf="@id/tvUpdatedAt"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
