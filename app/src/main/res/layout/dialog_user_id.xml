@@ -29,12 +29,12 @@
         android:inputType="number"
         android:minHeight="48dp"
         android:textSize="17sp"
-        app:layout_constraintBottom_toTopOf="@id/btnCreateUser"
+        app:layout_constraintBottom_toTopOf="@id/btnOkay"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvDialogTitle" />
 
     <TextView
-        android:id="@+id/btnCreateUser"
+        android:id="@+id/btnOkay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"

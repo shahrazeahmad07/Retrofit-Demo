@@ -13,8 +13,11 @@ import com.example.retrofitdemo.apiinterface.UsersApiInterface
 import com.example.retrofitdemo.apiinterface.UsersRetrofitUtilities
 import com.example.retrofitdemo.databinding.ActivityMain1Binding
 import com.example.retrofitdemo.databinding.DialogCreateUserBinding
+import com.example.retrofitdemo.databinding.DialogShowSingleUserBinding
 import com.example.retrofitdemo.databinding.DialogUserIdBinding
+import com.example.retrofitdemo.model.Data
 import com.google.gson.JsonObject
+import com.squareup.picasso.Picasso
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.create
@@ -49,13 +52,61 @@ class MainActivity1 : AppCompatActivity() {
         }
     }
 
+    //! get user ID
     private fun showIdDialog() {
         val dialog = Dialog(this)
         val dialogBinding = DialogUserIdBinding.inflate(layoutInflater)
         dialog.setContentView(dialogBinding.root)
+        dialogBinding.btnOkay.setOnClickListener {
+            val userId = dialogBinding.etDialogUserId.text.toString()
+            if (userId.isNotEmpty()) {
+                getSingleUser(userId)
+                dialog.dismiss()
+            } else {
+                Toast.makeText(this@MainActivity1, "Enter User ID!!", Toast.LENGTH_SHORT).show()
+            }
+        }
         dialog.show()
     }
 
+    private fun getSingleUser(id: String) {
+        //! Single User Data
+        lifecycleScope.launch {
+            val result = usersApi.getUserById(id)
+            if (result.isSuccessful && result.body() != null) {
+                showDetails(result.body()!!.data)
+            } else {
+                if (result.body() == null) {
+                    Toast.makeText(
+                        this@MainActivity1,
+                        "No User Found",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    Toast.makeText(
+                        this@MainActivity1,
+                        "Something Went Wrong: ${result.message()}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+    }
+
+    //! Show Single User details in Dialog
+    private fun showDetails(data: Data) {
+        val dialog = Dialog(this, R.style.ThemeDialog)
+        val dialogBinding = DialogShowSingleUserBinding.inflate(layoutInflater)
+        dialog.setContentView(dialogBinding.root)
+        Picasso.get().load(data.avatar).into(dialogBinding.ivUserAvatar)
+        val details = "ID: ${data.id}\n" +
+                "Name: ${data.first_name} ${data.last_name}\n" +
+                "Email: ${data.email}"
+        dialogBinding.tvUserName.text = details
+        dialog.show()
+    }
+
+    //! Show Create User dialog to get the user details
     private fun showCreateUserDialog() {
         val dialog = Dialog(this, R.style.ThemeDialog)
         val dialogBinding = DialogCreateUserBinding.inflate(layoutInflater)
@@ -77,6 +128,7 @@ class MainActivity1 : AppCompatActivity() {
         dialog.show()
     }
 
+    //! Create User Function
     private fun createUser(name: String, job: String) {
         //! Create User
         lifecycleScope.launch {
@@ -110,6 +162,7 @@ class MainActivity1 : AppCompatActivity() {
         }
     }
 
+    //! overriding on Destroy
     override fun onDestroy() {
         super.onDestroy()
         if (binding != null) {

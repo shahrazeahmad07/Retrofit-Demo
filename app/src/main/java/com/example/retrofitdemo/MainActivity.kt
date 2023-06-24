@@ -52,16 +52,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        //! Single User Data
-        lifecycleScope.launch {
-            val result = usersApi.getUserById("8")
-            if (result.isSuccessful) {
-                Log.d("Single User", result.body()?.data.toString())
-            } else {
-                Log.d("Single User", result.message())
-            }
-        }
-
         //! Update User
         lifecycleScope.launch {
             val body = JsonObject().apply {
