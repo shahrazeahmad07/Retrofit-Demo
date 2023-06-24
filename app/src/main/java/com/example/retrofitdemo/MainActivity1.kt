@@ -13,6 +13,7 @@ import com.example.retrofitdemo.apiinterface.UsersApiInterface
 import com.example.retrofitdemo.apiinterface.UsersRetrofitUtilities
 import com.example.retrofitdemo.databinding.ActivityMain1Binding
 import com.example.retrofitdemo.databinding.DialogCreateUserBinding
+import com.example.retrofitdemo.databinding.DialogUserIdBinding
 import com.google.gson.JsonObject
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
@@ -32,18 +33,27 @@ class MainActivity1 : AppCompatActivity() {
         usersApi =
             UsersRetrofitUtilities.getRetrofitInstance().create(UsersApiInterface::class.java)
 
+        //! Create User Button
+        binding?.btnCreateUser?.setOnClickListener {
+            showCreateUserDialog()
+        }
+
+        //! Get All users Button
         binding?.btnGetAllUsers?.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
 
-        binding?.btnCreateUser?.setOnClickListener {
-            showCreateUserDialog()
+        binding?.btnGetSingleUser?.setOnClickListener {
+            showIdDialog()
         }
     }
 
     private fun showIdDialog() {
-
+        val dialog = Dialog(this)
+        val dialogBinding = DialogUserIdBinding.inflate(layoutInflater)
+        dialog.setContentView(dialogBinding.root)
+        dialog.show()
     }
 
     private fun showCreateUserDialog() {

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MainActivity1">
 
     <Button
@@ -13,10 +13,10 @@
         android:text="@string/create_user"
         android:textAllCaps="false"
         android:textSize="17sp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/btnGetAllUsers"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/btnGetAllUsers"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btnGetAllUsers"
@@ -25,10 +25,10 @@
         android:text="@string/get_all_users"
         android:textAllCaps="false"
         android:textSize="17sp"
-        app:layout_constraintTop_toBottomOf="@+id/btnCreateUser"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/btnGetSingleUser"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btnGetSingleUser"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnCreateUser" />
 
     <Button
         android:id="@+id/btnGetSingleUser"
@@ -37,10 +37,10 @@
         android:text="@string/get_single_user"
         android:textAllCaps="false"
         android:textSize="17sp"
-        app:layout_constraintTop_toBottomOf="@+id/btnGetAllUsers"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/btnUpdateUser"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btnUpdateUser"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnGetAllUsers" />
 
 
     <Button
@@ -50,10 +50,10 @@
         android:text="@string/update_user_by_id"
         android:textAllCaps="false"
         android:textSize="17sp"
-        app:layout_constraintTop_toBottomOf="@+id/btnGetSingleUser"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/btnDeleteUser"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/btnDeleteUser"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnGetSingleUser" />
 
     <Button
         android:id="@+id/btnDeleteUser"
@@ -62,9 +62,9 @@
         android:text="@string/delete_user_by_id"
         android:textAllCaps="false"
         android:textSize="17sp"
-        app:layout_constraintTop_toBottomOf="@id/btnUpdateUser"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnUpdateUser" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
