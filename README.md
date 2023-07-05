@@ -11,9 +11,9 @@ its a very simple API, the API returns only a list of users, so the model class 
 https://reqres.in/api/users?page=2<br>
 This API is also not very complicated but the thing to learn is that what should be the structure of the model class when the API returns not only the list but some other members too.
 
-You can check the implementation of both APIs in branches of this repo.
-Main2 = Reqres API,
-Main = GitHub API.
+You can check the implementation of both APIs in branches of this repo.<br>
+Main2 = Reqres API,<br>
+Main = GitHub API.<br>
 
 I have just fetched data with GitHub API becuase there were no other methods availble for that API.
 But for Reqres API version I have implemented all the CRUD funcitonality (in Retrofit terms => Get, Post, Update, Delete)
